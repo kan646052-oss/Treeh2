@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SWAP GREEN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --accent: #34d399;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #e0f2fe;
+      --overlay: rgba(6, 78, 59, 0.5);
+      --price-color: #a3e635;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body 
+    {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(15,23,42,0.85); backdrop-filter: blur(12px);
+      z-index: 1000; border-bottom: 1px solid #334155;
+    }
+    .nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+    .logo { font-size: 1.8rem; font-weight: 800; color: #34d399; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a { color: #a5f3fc; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: white; }
+    .btn { background: var(--primary); color: white; padding: 10px 28px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s; }
+    .btn:hover { background: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(16,185,129,0.3); }
+
+    .hero { min-height: 100vh; position: relative; display: flex; align-items: center; text-align: center; overflow: hidden; }
+    .hero video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); object-fit: cover; z-index: 1; }
+    .hero-overlay { position: absolute; inset: 0; background: var(--overlay); z-index: 2; }
+
+    .leaves-container { position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+    .leaf { position: absolute; border-radius: 40% 60% 70% 30% / 60% 30% 70% 40%; opacity: 0.75; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); transform-origin: center; }
+    @keyframes fall1 { 0% { transform: translateY(-120vh) translateX(0) rotate(0deg); opacity: 0.85; } 50% { transform: translateY(50vh) translateX(35vw) rotate(180deg); } 100% { transform: translateY(120vh) translateX(70vw) rotate(360deg); opacity: 0; } }
+    @keyframes fall2 { 0% { transform: translateY(-120vh) translateX(0) rotate(0deg); opacity: 0.85; } 50% { transform: translateY(55vh) translateX(-45vw) rotate(-180deg); } 100% { transform: translateY(120vh) translateX(-85vw) rotate(-360deg); opacity: 0; } }
+    @keyframes fall3 { 0% { transform: translateY(-120vh) translateX(0) rotate(0deg); opacity: 0.85; } 40% { transform: translateY(45vh) translateX(25vw) rotate(150deg) scale(1.08); } 100% { transform: translateY(120vh) translateX(55vw) rotate(720deg) scale(0.85); opacity: 0; } }
+
+    .hero-content { position: relative; z-index: 4; max-width: 1000px; padding: 0 20px; }
+    .hero h1 { font-size: clamp(3.8rem, 9vw, 7rem); margin-bottom: 1.5rem; background: linear-gradient(90deg, #d1fae5, #a7f3d0, #6ee7b7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.5rem; margin-bottom: 2rem; color: #d1fae5; }
+    .hero .example { font-size: 1.3rem; font-style: italic; color: #bbf7d0; margin: 2.5rem 0; padding: 20px; background: rgba(16,185,129,0.15); border-radius: 16px; border: 1px solid rgba(52,211,153,0.4); }
+    .btn-large { font-size: 1.4rem; padding: 18px 56px; }
+
+    .section { padding: 140px 0; background: var(--bg); }
+    .section h2 { text-align: center; font-size: 3.5rem; margin-bottom: 5rem; background: linear-gradient(90deg, #6ee7b7, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .trees-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; }
+    
+    .tree-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid #334155;
+      transition: all 0.4s ease;
+    }
+    .tree-card:hover { transform: translateY(-12px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(16,185,129,0.25); }
+    .tree-card img { width: 100%; height: 220px; object-fit: cover; border-radius: 14px; margin-bottom: 16px; }
+    .tree-card h4 { color: #d1fae5; margin-bottom: 12px; font-size: 1.35rem; }
+    .tree-card .price { font-size: 1.2rem; font-weight: 700; color: var(--price-color); margin: 16px 0 12px; text-align: center; background: rgba(163,230,53,0.15); padding: 8px; border-radius: 12px; }
+    .tree-card details { margin: 8px 0; background: rgba(16,185,129,0.08); border: 1px solid rgba(52,211,153,0.3); border-radius: 10px; overflow: hidden; }
+    .tree-card summary { padding: 12px 16px; font-weight: 600; cursor: pointer; color: #a5f3fc; }
+    .tree-card details[open] summary { background: rgba(16,185,129,0.15); }
+    .tree-card p { padding: 0 16px 16px; font-size: 0.95rem; }
+
+    footer { background: #0f172a; padding: 100px 0 50px; text-align: center; border-top: 1px solid #334155; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 4rem; }
+      .section { padding: 100px 0; }
+      .trees-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container nav">
+      <div class="logo">SWAP GREEN</div>
+      <div class="nav-links">
+        <a href="#">หน้าแรก</a>
+        <a href="#">การเพาะปลูก</a>
+        <a href="#">การซื้อขาย</a>
+        <a href="#">กิจกรรม</a>
+        <a href="#">เกียวกับเรา</a>
+        <a href="#">ติดต่อ</a>
+        <a href="https://www.online-currency.vip/#/pages/index/index" class="btn">เข้าสู้ระบบ</a>
+      </div>
+    </div>
+  </header>
+  
+  <section class="hero">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="https://cdn.pixabay.com/video/2025/03/23/266987_large.mp4" type="video/mp4">
+      <source src="https://videos.pexels.com/video-files/30895151/13098529_2560_1440_24fps.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+
+    <!-- ใบไม้ลอย 20 ใบ (เหมือนเดิม) -->
+    <div class="leaves-container">
+      <!-- ... (paste 20 div.leaf จากเวอร์ชันก่อนหน้า) ... -->
+    </div>
+
+    <div class="container hero-content">
+      <h1> SWAP GREEN </h1>
+      <p> แลกต้นไม้ สีเขียวเพื่อสังคม” ทุกใบที่คุณแลก คือลมหายใจที่เรามอบให้โลกใบนี้</p>
+      <div class="example">โอกาสพิเศษให้สมาชิกมีส่วนร่วมในการ "สนับสนุนการประมูลต้นไม้"</div>
+      <a href="#" class="btn btn-large">สร้างโลกธรรมชาติของคุณ</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>ประวัติ • การเพาะปลูก • วิธีดูแล • จำนวนแต้ม</h2>
+      <div class="trees-grid">
+
+        <div class="tree-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ82-_rhfp802qBpoAd1aK9lGhC_Jmagb8rJs4gvfyBz1Lj5rvLpXEPZhnZZZ1t1MXtN9rGVrplNDK3m4RJsVTIjqBu5UKyQkmGlAx_Ohs&s=10" alt="Monstera Deliciosa"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Monstera Deliciosa (พลูฉลุ)</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>มีถิ่นกำเนิดในเขตอบอุ่นและเขตร้อนของอเมริกากลางและอเมริกาใต้ พบได้มากในประเทศเปรู
+            ความหายาก: ในธรรมชาติ Monstera Obliqua สายพันธุ์แท้ (เช่น Obliqua Peru) ถือเป็นไม้ที่ หายากและเติบโตช้ามาก ต่างจาก "พลูฉลุ" (Monstera Adansonii) ที่พบเห็นได้ทั่วไปตามร้านขายต้นไม้ ซึ่งมักจะถูกเข้าใจผิดว่าเป็นชนิดเดียวกัน
+            ฉายา: ใบที่มีลักษณะโหว่กว้างจนเกือบเหลือแต่เส้นใบ ทำให้มันได้รับฉายาในกลุ่มนักสะสมว่าเป็นต้นไม้ที่มีใบ "เหมือนลูกไม้" (Lace-like) หรือโครงกระดูก ช่วยฟอกอากาศดีเยี่ยม เพิ่มความชุ่มชื้น ลดเครียด</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>แสงแดด: ชอบ แสงแดดรำไร หรือแสงที่สว่างแต่ไม่สัมผัสใบโดยตรง ❌ ควรเลี่ยงแดดจัด เพราะใบที่บางมากจะไหม้ได้ง่าย
+            ความชื้น: สำคัญมาก ต้องการความชื้นสูง (High Humidity) ควรพ่นละอองน้ำเป็นประจำ หรือวางในพื้นที่ที่มีความชื้นคงที่ เช่น ห้องน้ำที่มีแสงสว่าง หรือใช้เครื่องทำความชื้น
+            การรดน้ำ: รดน้ำเมื่อดินเริ่มแห้ง (ประมาณสัปดาห์ละ 1-2 ครั้ง) ระวังอย่าให้แฉะจนเกินไปเพราะอาจทำให้รากเน่าได้
+            วัสดุปลูก: ควรใช้วัสดุที่ระบายน้ำและอากาศได้ดี เช่น ดินร่วนผสมกาบมะพร้าวสับ หรือเพอร์ไลต์ เพื่อให้รากเดินได้สะดวกและไม่ขังน้ำ
+            การบำรุง: สามารถใช้ผ้าชุบน้ำเช็ดใบเบาๆ เพื่อกำจัดฝุ่นและช่วยให้พืชสังเคราะห์แสงได้ดีขึ้น</p></details>
+        </div>
+
+        <div class="tree-card">
+          <img src="https://static.wixstatic.com/media/e1ce09_1f653d1cb38a41a6a391b4d56ceb248c~mv2.jpg/v1/fill/w_568,h_710,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/e1ce09_1f653d1cb38a41a6a391b4d56ceb248c~mv2.jpg" alt="Monstera Deliciosa"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Philodendron Pink Princess</h4>
+          <div class="price">ราคา: ต้นกล้า 80-300 บาท | ต้นโต 1,200-5,000 บาท</div>
+          <details><summary>ประวัติ</summary><p>(The Legacy) ต้นกำเนิด: เป็นไม้ลูกผสม (Hybrid) ในตระกูล Philodendron มีถิ่นกำเนิดดั้งเดิมจากแถบอเมริกาใต้ (โคลอมเบีย)ุณประโยชน์ (The Benefits)
+            ฟอกอากาศชั้นเลิศ: มีประสิทธิภาพสูงในการดูดซับสารพิษในอาคาร เช่น ฟอร์มาลดีไฮด์ (จากสีทาบ้าน/เฟอร์นิเจอร์) ช่วยให้หลับสบายขึ้น
+            บำบัดอารมณ์: สีชมพูช่วยลดฮอร์โมนความเครียด สร้างความรู้สึกผ่อนคลายและกระตุ้นความคิดสร้างสรรค์ในที่ทำงาน
+            เสริมฮวงจุ้ย: สีชมพูสื่อถึง "ความเมตตาและเสน่ห์" เชื่อว่าช่วยเสริมดวงด้านความรัก มิตรภาพ และดึงดูดพลังงานบวกเข้ามาในบ้านค่ะ</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดทั้งลูก วางนอนในดินทราย ระยะห่าง 7-9 ม. ต้องการแดดจัด</p></details>
+          <details><summary>วิธีดูแล</summary><p>1. แสงแดด (The Lighting):
+            หัวใจสำคัญ: ชอบแสงแดดรำไร (Bright Indirect Light)
+            เคล็ดลับ: ถ้าแสงน้อยไป ใบจะกลายเป็นสีเขียวล้วน (หลุดด่าง) แต่ถ้าแดดแรงไป ใบชมพูที่บอบบางจะไหม้ได้ง่ายค่ะ
+            2. การรดน้ำ (Watering):
+            รดน้ำเมื่อหน้าดินแห้ง (ประมาณ 2-3 วันครั้ง)
+            ระวัง: อย่าให้น้ำขังจนแฉะ เพราะรากจะเน่าได้ง่ายกว่าฟิโลฯ ชนิดอื่น
+            3. วัสดุปลูก (Soil):
+            ต้องโปร่งและระบายน้ำดีเยี่ยม แนะนำให้ผสม กาบมะพร้าวสับ, เพอร์ไลต์ และหินภูเขาไฟ เพื่อให้รากเดินสะดวกและหายใจออกค่ะ
+            4. ความชื้น (Humidity):
+            ชอบความชื้นสัมพัทธ์สูง (50% ขึ้นไป) จะทำให้ใบเงางามและคลี่ใบใหม่ได้ง่าย ไม่ติดขัด
+            5. การบำรุง:
+            ใส่ปุ๋ยละลายช้า (Osmocote) ทุกๆ 3 เดือน เพื่อให้ได้รับสารอาหารต่อเนื่องค่ะ</p></details>
+        </div>
+
+         <div class="tree-card">
+          <img src="https://www.thespruce.com/thmb/DizsBW_GJ0-8NE8FI-qg2UPYfiw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/calathea-orbifolia-growing-guide-5270824-hero-2a3b8667f05b40a49b27da573d2486fb.jpg" alt="Calathea orbifolia" class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Calathea orbifolia</h4>
+          <div class="price">ราคา: ต้นกล้า 80-300 บาท | ต้นโต 1,200-5,000 บาท</div>
+          <details><summary>ประวัติ</summary><p>ไม้ประดับจากป่าฝนเขตร้อนใน Bolivia ทวีป South America อยู่ในวงศ์ Marantaceae ใบมีลายสีเงินสวยงามและสามารถขยับตามแสงได้เล็กน้อย จึงนิยมปลูกในบ้าน คอนโด หรือมุมทำงาน เพื่อความสวยงาม ให้ความรู้สึกสงบ สบายตา เพราะช่วยเพิ่มความชุ่มชื้นและบรรยากาศผ่อนคลาย</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>นิยมใช้วิธี แยกกอ
+                            ขั้นตอน
+                            - นำต้นออกจากกระถาง
+                            - แยกเหง้าหรือกอออกเป็นต้นย่อย
+                            - ปลูกลงกระถางใหม่ที่มีดินโปร่ง
+                            - รดน้ำให้ชุ่ม และวางในที่แสงรำไร</p></details>
+          <details><summary>วิธีดูแล</summary><p>แสง : ชอบแสงรำไร ไม่ควรโดนแดดจัด
+                            น้ำ : รดน้ำเมื่อดินเริ่มแห้ง แต่ไม่ให้ดินแฉะ
+                            ความชื้น : ชอบอากาศชื้น ควรฉีดพ่นละอองน้ำบ้าง
+                            ดิน : ใช้ดินโปร่ง ระบายน้ำดี
+                            อุณหภูมิ : เหมาะกับอุณหภูมิประมาณ 18–27°C 🌿
+
+                            ❌ข้อควรระวัง
+                            - แดดแรงทำให้ใบไหม้
+                            - อากาศแห้งเกินไปทำให้ใบม้วนหรือปลายใบแห้ง
+                            - ระวังไรแดงและเพลี้ยแป้ง</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://down-th.img.susercontent.com/file/th-11134207-23010-681nod7cf0lv67" alt="Boston Fern"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>บอสตันเฟิร์น (Boston Fern) </h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>เฟิร์นเป็นพืชคู่โลกที่มีมานานแสนนานแล้วชนิดหนึ่ง ดังปรากฎหลักฐานจากร่องรอยในหินฟอสซิลที่ขุดพบ เฟิร์นยังเป็นไม้ประดับยอดนิยมชนิดหนึ่งที่นิยมนำมาเป็นไม้ประดับทั้งในและนอกอาคาร บอสตันเฟิร์นมีลักษณะก้านใบแข็งโค้งออกและทิ้งตัวลงเมื่ออายุมากขึ้น ใบขึ้นหนาทึบไม่มีดอก</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>นิยมปลูกในกระถางแขวนหรือในกระถางใช้ประดับตามเสาหิน เมื่อนำมาปลูกเป็นไม้ประดับในอาคาร บอสตันเฟิร์นต้องการการดูแลพอสมควร เนื่องจากต้องการความชุ่มชื้นอย่างสม่ำเสมอ ถ้าขาดน้ำ สีของใบจะเปลี่ยนเป็นสีน้ำตาลและร่วงอย่างรวดเร็ว จึงควรหมั่นรดน้ำให้ดินชุ่มชื้นหรือฉีดพ่นด้วยละอองน้ำ</p></details>
+          <details><summary>วิธีดูแล</summary><p>บอสตันเฟิร์นเป็นไม้ประดับที่ช่วยทำความสะอาดให้แก่อากาศภายในได้ดีชนิดหนึ่ง สามารถดูดสารพิษได้มาก โดยเฉพาะจำพวกฟอร์มาดีไฮด์ และยังช่วยเพิ่มความชุ่มชื้นให้แก่อาคารภายในอาคารได้อย่างดี</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://s359.kapook.com/pagebuilder/20ffdf08-bad3-4fa0-b6ca-50b9343585c7.jpg" alt="Rubber Plant"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>ต้นยางอินเดีย(Rubber Plant)</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>เป็นไม้ประดับที่ได้รับความนิยมสูงทั้งในแง่ของความสวยงามและการฟอกอากาศ. มีลักษณะเด่นที่ใบหนา เป็นมันเงา และมีขนาดใหญ่ โดยในทางฮวงจุ้ยเชื่อว่าเป็นต้นไม้มงคลที่ช่วยดักเงินดักทองและเสริมความมั่งคั่ง</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>ควรใช้ดินที่ระบายน้ำได้ดี เช่น ดินผสมใบก้ามปูหรือดินที่มีส่วนผสมของพีทมอสและเพอร์ไลต์</p></details>
+          <details><summary>วิธีดูแล</summary><p>แสงแดด : ชอบแสงแดดรำไรหรือแสงแดดเช้าประมาณ 3-6 ชั่วโมงต่อวัน. ควรหลีกเลี่ยงแสงแดดจัดโดยตรงในช่วงบ่ายเพราะอาจทำให้ใบไหม้เป็นจุดสีน้ำตาลได้
+                            การรดน้ำ : รดน้ำเมื่อหน้าดินเริ่มแห้ง (ประมาณ 1 นิ้วจากผิวดิน) ไม่ควรให้มีน้ำขังแฉะเพราะจะทำให้เกิดโรครากเน่าได้ง่าย
+                            ความชื้นและการทำความสะอาด: เนื่องจากใบมีขนาดใหญ่และเงา ควรใช้ผ้าชุบน้ำบิดหมาดเช็ดฝุ่นออกจากใบเป็นประจำ เพื่อให้พืชสังเคราะห์แสงได้ดีและดูสวยงามอยู่เสมอ</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://www.thetutuguru.com.au/wp-content/uploads/2024/07/Ficus-lyrata-Fiddle-Leaf-Fig-Tree-potted-indoors.jpg" alt="Fiddle Leaf Fig" s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4> Fiddle Leaf Fig</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ต้น Fiddle Leaf Fig
+                            หรือที่คนไทยรู้จักกันในชื่อ "ไทรใบสัก" เป็นไม้ยืนต้นในวงศ์ Moraceae มีลักษณะเด่นที่ใบขนาดใหญ่ ผิวมันวาว และขอบใบหยักพริ้วดูคล้ายเครื่องดนตรีประเภทไวโอลิน นิยมนำมาปลูกเป็นไม้ประดับภายในบ้าน อาคาร หรือคาเฟ่ เพราะช่วยสร้างบรรยากาศให้ดูทันสมัยและมีคุณสมบัติช่วยฟอกอากาศได้ดี</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>วิธีการดูแลให้รอดและสวยงามไทรใบสักขึ้นชื่อว่าเป็นต้นไม้ที่ค่อนข้าง "เอาใจยาก" หากดูแลไม่ถูกวิธีอาจใบร่วงหรือใบไหม้ได้ง่าย โดยมีหลักการดูแลดังนี้แสงแดด: ชอบแสงแดดรำไรหรือแสงแดดอ่อนๆ ยามเช้า ควรวางใกล้หน้าต่างทิศตะวันออกหรือทิศใต้ที่ได้รับแสงธรรมชาติอย่างน้อย 6-8 ชั่วโมงต่อวัน หลีกเลี่ยงแสงแดดจัดโดยตรงเพราะจะทำให้ใบไหม้ และควรหมุนกระถางเดือนละครั้งเพื่อให้ต้นเติบโตตั้งตรงไม่เอนหาแสงเพียงด้านเดียว
+                            การรดน้ำ : รดน้ำเมื่อดินชั้นบนแห้ง (ประมาณ 1-2 นิ้ว) โดยเฉลี่ยประมาณ 10-14 วันต่อครั้ง ขึ้นอยู่กับสภาพอากาศ ระวังอย่ารดน้ำจนแฉะเกินไปเพราะจะทำให้เกิดโรครากเน่าและใบร่วงได้
+                            ดินและปุ๋ย : ใช้ดินที่ระบายน้ำได้ดี เช่น ดินร่วนปนทรายหรือดินผสมพีทมอส ควรใส่ปุ๋ยสูตรเสมอ (เช่น 15-15-15) ประมาณเดือนละครั้งในช่วงฤดูร้อนและฤดูใบไม้ผลิ
+                            ความชื้นและการทำความสะอาด : ชอบอากาศถ่ายเทและความชื้นสูง ควรใช้ผ้าชุบน้ำบิดหมาดเช็ดใบเป็นประจำเพื่อกำจัดฝุ่น ช่วยให้ใบเงางามและพืชสังเคราะห์แสงได้ดีขึ้น
+                            ข้อควรระวัง : ไม่ควรย้ายที่บ่อยๆ เพราะต้นไม้จะเกิดอาการ "ช็อก" และทิ้งใบ และควรวางให้ห่างจากลมโกรกจากเครื่องปรับอากาศความเป็นสิริมงคลตามความเชื่อทางฮวงจุ้ย ไทรใบสักถือเป็นไม้มงคลที่สื่อถึง ความเจริญเติบโตที่แข็งแรง ความอดทน และความสดใส เชื่อว่าการปลูกไว้ในบ้านจะช่วยเสริมเมตตามหานิยมและดึงดูดพลังงานบวก โดยนิยมวางไว้ทาง ทิศตะวันออก เพื่อเสริมสิริมงคล</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnk8-HProAIEOcaUPA1Wt6cDps-GMeCdN1Hw&s" alt="Philodendron Rojo Congo"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Philodendron Rojo Congo</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p> (The Origin) สายพันธุ์: Birkin ไม่ใช่ไม้ป่าธรรมชาติ แต่เป็น "ความผิดปกติที่สวยงาม" (Mutation) ที่เกิดขึ้นเองจากต้น Philodendron Rojo Congo (ฟิโลแดง)</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>ต้องโปร่งและระบายน้ำดีเยี่ยม แนะนำผสม กาบมะพร้าวสับ, เพอร์ไลต์ หรือหินภูเขาไฟ เพื่อให้รากเดินสะดวก</p></details>
+          <details><summary>วิธีดูแล</summary><p>ั้นตอนการดูแลให้ "ลายสวยชัดเจน" (Care Guide) Birkin เลี้ยงง่ายและทนทาน แต่มีเทคนิคเฉพาะเพื่อให้ลายไม่หลุดด่างค่ะ:
+                            1. แสงแดด (Lighting): ชอบแสงสว่างรำไร (Bright Indirect Light)เคล็ดลับ: ถ้าแสงน้อยไป ลายขาวจะหายไปกลายเป็นสีเขียวล้วน (หลุดด่าง) แต่ถ้าแดดแรงไป ใบขาวๆ จะไหม้ง่ายมากค่ะ ⚠️
+                            2. การรดน้ำ (Watering): รดเมื่อหน้าดินแห้ง (ประมาณ 2-3 วันครั้ง หรือสัปดาห์ละ 2 ครั้ง)ระวัง: อย่าให้น้ำขังในกาบใบ เพราะอาจทำให้ยอดเน่าได้ค่ะ 
+                            3. วัสดุปลูก (Soil): ต้องโปร่งและระบายน้ำดีเยี่ยม แนะนำผสม กาบมะพร้าวสับ, เพอร์ไลต์ หรือหินภูเขาไฟ เพื่อให้รากเดินสะดวกค่ะ
+                            4. ความชื้นและการทำความสะอาด: ชอบความชื้นปานกลาง และควรใช้ผ้าชุบน้ำหมาดๆ เช็ดฝุ่นบนใบสม่ำเสมอ เพื่อให้ใบเงางามและโชว์ลายเส้นได้เต็มที่ค่ะ </p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://www.plantshop.me/media/product/Monstera_Adansonii_Tall-56-plantshopme.jpg" alt="Adansonii"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Adansonii</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>มีต้นกำเนิดมาจากป่าฝนเขตร้อนในแถบ อเมริกากลางและอเมริกาใต้ (เช่น บราซิล, โคลอมเบีย, เปรู) </p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>3. วัสดุปลูกและอาหาร (Soil & Food):
+                            ใช้ดินที่ โปร่งและระบายน้ำดีมาก (ผสมกาบมะพร้าวสับ, เพอร์ไลต์ หรือเปลือกไม้) ใส่ปุ๋ยละลายช้า (Osmocote) ทุกๆ 3 เดือน เพื่อบำรุงใบให้เขียวเงา</p></details>
+          <details><summary>วิธีดูแล</summary><p>ขั้นนตอนการดูแล (ฉบับมือโปร)
+                            ดูแลไม่ยากเลยค่ะ แค่ใส่ใจ 3 ปัจจัยหลักนี้:
+                            1. แสงแดด (Light):
+                            1.1 ชอบ "แสงแดดรำไร" หรือแสงสว่างทางอ้อม (Bright Indirect Light)
+                            1.2 ห้าม วางกลางแดดจัดโดยตรง เพราะใบที่บอบบางจะไหม้ทันที
+
+                            2. การรดน้ำ (Water):
+                            2.1 รดน้ำเมื่อ ดินชั้นบนแห้ง (ประมาณ 1-2 นิ้วแรก)
+                            2.2 ปกติจะรดประมาณ 2-3 ครั้งต่อสัปดาห์ (ขึ้นอยู่กับความร้อนของอากาศ) ระวังอย่าให้มีน้ำขังในจานรอง เพราะรากจะเน่าได้ง่าย
+
+                            3. วัสดุปลูกและอาหาร (Soil & Food): 🪴
+                            3.1 ใช้ดินที่ โปร่งและระบายน้ำดีมาก (ผสมกาบมะพร้าวสับ, เพอร์ไลต์ หรือเปลือกไม้)
+                            3.2 ใส่ปุ๋ยละลายช้า (Osmocote) ทุกๆ 3 เดือน เพื่อบำรุงใบให้เขียวเงา</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://www.ourhouseplants.com/imgs-content/monstera-deliciosa-moss-pole.jpg" alt="Monstera Deliciosa"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Monstera adansoni</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>มอนสเตอร่า มาจากป่าดิบเขตร้อน เม็กซิโกตอนใต้ & อเมริกากลางเป็นไม้เลื้อย epiphyte ใช้รากอากาศปีนต้นไม้ชื่อมาจากใบ “แปลกประหลาด” + ผล “อร่อย” (แต่ในบ้านแทบไม่ออกผล)ฮิตมากในไทย เป็นราชินีไม้ใบ ทน ฟอกอากาศเก่ง!วิธีดูแลหลัก ๆ</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>ชอบสูง 60-80%แห้งง่าย (ห้องแอร์) → ปลายใบกรอบแก้ด้วย: ฉีดน้ำหมอกทุกวัน / ถาดกรวด+น้ำ / humidifier</p></details>
+          <details><summary>วิธีดูแล</summary><p>ปุ๋ยไม้ใบ (20-20-20 หรือ 10-10-10) เจือจางครึ่ง ใส่ทุก 4-6 สัปดาห์ (ฤดูโต)หยุดหน้าหนาว</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://cerbogreenhouse.com/wp-content/uploads/MONT1-600x800.jpg" alt="Monstera Thai Constellation"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Monstera Thai Constellation</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ประวัติและความสำคัญที่มา: ต้นกำเนิดจากห้องแล็บไทย: แม้ตระกูล Monstera จะมีถิ่นกำเนิดในอเมริกากลาง แต่สายพันธุ์ "Thai Constellation" ถูกพัฒนาขึ้นครั้งแรกใน ห้องแล็บเพาะเลี้ยงเนื้อเยื่อ (Tissue Culture) ในประเทศไทย ช่วงปลายทศวรรษ 1990 ถึงต้น 2000</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>การปลูก Monstera Thai Constellation ให้รอดและโตไว หัวใจสำคัญคือ "ความโปร่ง" ของวัสดุปลูกครับ เพราะรากของไม้ด่างชนิดนี้เน่าได้ง่ายกว่าปกติ
+                            1. การเตรียมวัสดุปลูก (หัวใจหลัก)
+                            ไทยคอนฯ ไม่ชอบดินถุงทั่วไปที่แน่นเกินไป แนะนำสูตรผสมเองที่เน้นระบายน้ำ:
+                            กาบมะพร้าวสับ (แช่น้ำ 2-3 คืนก่อนใช้): 50% ช่วยเก็บความชื้นแต่ไม่แฉะ
+                            หินภูเขาไฟ หรือ เพอร์ไลต์: 30% ช่วยเพิ่มช่องว่างให้อากาศถ่ายเท
+                            เปลือกสน หรือ ดินใบก้ามปู: 20% ให้สารอาหารและช่วยให้รากเกาะตัวได้ดี
+                            ผสมสตาร์เกิล จี (Starkle-G) เล็กน้อยเพื่อกันแมลงในดิน
+                            2. ขั้นตอนการลงกระถาง
+                            เลือกกระถาง: เลือกขนาดที่พอดีกับกอราก (ไม่ควรใหญ่เกินไป เพราะจะอมน้ำมากเกินจนรากเน่า) และต้องมีรูระบายน้ำเยอะๆ
+                            รองก้นกระถาง: ใช้หินภูเขาไฟเบอร์ใหญ่หรือถ่านไม้รองก้นประมาณ 1 นิ้ว
+                            วางต้นไม้: จัดวางให้โคนต้นอยู่ระดับพอดีกับขอบกระถาง ห้ามฝังลำต้น (Petiole) ลงไปในดินลึกเกินไป เพราะก้านใบจะเน่าได้ง่าย
+                            เติมวัสดุปลูก: ใส่เครื่องปลูกที่ผสมไว้รอบๆ แล้วกดเบาๆ ให้ต้นตั้งตรง
+                            3. การตั้งวาง (Location)
+                            หลังปลูกเสร็จ: รดน้ำให้ชุ่มจนทะลุก้นกระถาง แล้วนำไปวางในที่ ร่มรำไร มีอากาศถ่ายเทสะดวก
+                            ห้ามโดนแดดตรง: ในช่วง 1-2 สัปดาห์แรกอย่าเพิ่งรีบให้โดนแดด เพื่อให้รากเดินและปรับตัวกับสภาพแวดล้อมใหม่
+                            4. การปักหลัก (Support)
+                            เนื่องจากมอนสเตอร่าเป็นไม้เลื้อย เมื่อต้นเริ่มโตควรหา หลักกาบมะพร้าว หรือ หลักไม้เลื้อย มาปักเพื่อให้รากอากาศยึดเกาะ จะช่วยให้ใบใหม่มีขนาดใหญ่ขึ้นและฉีกเป็นแฉกสวยงามครับ
+                            คุณมีต้นที่ได้มาแบบ "ไม้เนื้อเยื่อ" (ต้นจิ๋ว) หรือเป็น "ไม้กระถาง" ที่จะเปลี่ยนดินใหม่ครับ? (การดูแลต้นเล็กจะมีความละเอียดกว่าเล็กน้อยครับ)</p></details>
+          <details><summary>วิธีดูแล</summary><p>การดูแล Monstera Thai Constellation ให้ใบใหญ่ ลายสวย และไม่เน่า ง่ายกว่าที่คิดครับ เพียงแค่ต้องเข้าใจ "ธรรมชาติ" ของเขาที่โตมาจากห้องแล็บและความด่างที่มีพันธุกรรมเฉพาะตัว ดังนี้ครับ:
+                            1. แสงแดด (Light) ☀️
+                            กึ่งร่มกึ่งแดด (Bright Indirect Light): ชอบแสงสว่างที่ส่องถึงแต่ไม่โดนตัวโดยตรง (เช่น ริมหน้าต่างที่มีม่านกรอง)
+                            ข้อควรระวัง: อย่าให้โดนแดดจัดตรงๆ เพราะส่วนสีครีม (ด่าง) ไม่มีคลอโรฟิลล์จะ ไหม้แดด (Sunburn) ได้ง่ายมาก และถ้ามืดเกินไปลายด่างจะเริ่มจางหรือโตช้า
+                            2. การรดน้ำ (Watering) 💧
+                            น้อยแต่พอดี: รดน้ำเมื่อ วัสดุปลูกแห้งลงไปประมาณ 1-2 นิ้ว (เช็กด้วยการนิ้วจิ้มดู) ปกติประมาณ 2-3 วันครั้ง หรือสัปดาห์ละ 1-2 ครั้ง ขึ้นอยู่กับความชื้นในบ้าน
+                            ระวังรากเน่า: ไทยคอนฯ ไวต่อความชื้นแฉะกว่ามอนสเตอร่าเขียวทั่วไป ห้ามรดจนน้ำขังในจานรองเด็ดขาด
+                            3. วัสดุปลูก (Soil/Potting Mix) 🪴
+                            เน้นความโปร่ง: ต้องระบายน้ำและอากาศได้ดีเยี่ยม สูตรแนะนำคือ กาบมะพร้าวสับ + เพอร์ไลต์ + หินภูเขาไฟ + เปลือกสน (ผสมดินใบก้ามปูเพียงเล็กน้อย) เพื่อให้รากหายใจได้สะดวก
+                            4. อุณหภูมิและความชื้น (Temp & Humidity) 🌡
+                            ชอบความชื้นสูง: หากเลี้ยงในห้องแอร์ ควรฉีดพ่นละอองน้ำรอบๆ ใบ หรือวางใกล้เครื่องทำความชื้น แต่อย่าให้ใบเปียกชุ่มทิ้งไว้นานเพราะอาจเกิดเชื้อรา
+                            อุณหภูมิ: ชอบอากาศอุ่นๆ แบบเมืองไทย (20-30 องศาเซลเซียส)
+                            5. การใส่ปุ๋ย (Fertilizer) 🧪
+                            ปุ๋ยละลายช้า (Osmocote): ใส่สูตรเสมอ 13-13-13 ทุกๆ 3 เดือน ช่วยให้ต้นไม้ได้รับสารอาหารต่อเนื่องโดยไม่ทำให้รากไหม้
+                            6. การดูแลใบ (Leaf Care) ✨
+                            เช็ดใบ: ใช้ผ้าชุบน้ำสะอาดเช็ดฝุ่นออกจากใบสม่ำเสมอ เพื่อให้พืชสังเคราะห์แสงได้ดีและดูเงางามสวยงาม
+                            เทคนิคพิเศษ: หากเลี้ยงจนเริ่มมี รากอากาศ ยาวออกมา แนะนำให้หา หลักกาบมะพร้าว มาให้เขาไต่ จะช่วยให้ใบใหม่มีขนาดใหญ่ขึ้นและฉีกสวยตามธรรมชาติครับ
+                            ตอนนี้ต้นที่คุณเลี้ยงอยู่มีอาการใบเหลืองหรือจุดน้ำตาลบ้างไหมครับ หรืออยากให้แนะนำแหล่งซื้อวัสดุปลูกดี?</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://www.thejunglecollective.com.au/wp-content/uploads/2025/09/variegated-monstera-albo-variegata-variegated-indoor-plants-pistils-nursery-6.jpg.webp" alt="Monstera deliciosa Albo"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Monstera deliciosa Albo</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ประวัติและความสำคัญของ Monstera Albo (หรือชื่อเต็ม Monstera deliciosa 'Albo Variegata') มีจุดเริ่มต้นที่น่าสนใจจากการเป็น "ความบังเอิญของธรรมชาติ"</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>การปลูก Monstera Albo ให้รอดและโตไว หัวใจสำคัญคือ "ความโปร่งของวัสดุปลูก" และ "การวางระบบราก" ครับ ไม่ว่าคุณจะเริ่มจากกิ่งชำหรือย้ายกระถางต้นใหญ่ ให้ทำตามขั้นตอนนี้ได้เลย
+                            1. เตรียม "วัสดุปลูก" (Aroid Mix)
+                            Albo เกลียดน้ำขังที่สุด ดินถุงทั่วไปจะแน่นเกินไป แนะนำให้ผสมเองในอัตราส่วนดังนี้:
+                            กาบมะพร้าวสับ (60%): แช่น้ำทิ้งไว้ 2-3 คืนเพื่อล้างสารแทนนิน ช่วยเก็บความชื้นแต่ไม่แฉะ
+                            เพอร์ไลต์ / หินภูเขาไฟ (30%): ช่วยระบายน้ำและเพิ่มช่องว่างให้อากาศเข้าถึงราก
+                            วัสดุอื่น (10%): เช่น มูลไส้เดือน (ธาตุอาหาร), เปลือกสน หรือใบก้ามปูผุ
+
+                            2. เลือก "กระถาง" ที่เหมาะสม
+                            ขนาด: ไม่ควรใหญ่เกินตัวต้นไม้ เพราะจะทำให้วัสดุปลูกอมน้ำมากเกินไปจนรากเน่า
+                            รูระบาย: ต้องมีรูระบายน้ำเยอะๆ (แนะนำกระถางพลาสติกใสเพื่อเช็คสุขภาพรากได้ง่าย)
+
+                            3. ขั้นตอนการปลูก
+                            รองก้นกระถาง: ใส่หินภูเขาไฟหรือกาบมะพร้าวสับชิ้นใหญ่ที่ก้นกระถางเพื่อให้ระบายน้ำได้คล่อง
+                            จัดวางต้น: วางต้น Albo ลงตรงกลาง หากเป็นกิ่งชำที่มีรากอากาศ ให้ค่อยๆ ม้วนรากลงไปในวัสดุปลูก
+                            ใส่เครื่องปลูก: เติมวัสดุปลูกที่ผสมไว้ลงไปรอบๆ ห้ามกลบโคนใบหรือตา (Node) ให้ลึกเกินไป เพราะจะทำให้เน่าได้ง่าย
+                            ติดตั้งหลัก: หากต้นเริ่มมีขนาดใหญ่ ควรปัก "หลักมอส" หรือไม้ค้ำไว้ตั้งแต่ตอนปลูก เพื่อให้รากอากาศยึดเกาะและใบขยายใหญ่ขึ้น
+
+                            4. การดูแลหลังปลูก (Critical Period)
+                            ช่วง 1-2 สัปดาห์แรก: วางในที่สว่างแต่ ไม่มีแดดส่องถึง (พรางแสง 70-80%) เพื่อให้ต้นไม้ปรับตัว
+                            การรดน้ำ: รดน้ำให้ชุ่มจนทะลุก้นกระถาง แล้วรอจนวัสดุปลูกชั้นบนแห้งค่อยรดใหม่
+                            ห้ามใส่ปุ๋ยแรง: ในช่วงเดือนแรกที่ย้ายกระถาง เพราะรากยังอ่อนแออยู่
+                            ข้อควรระวัง: หากเป็นกิ่งชำสด (Cutting) ที่ยังไม่มีราก แนะนำให้ ชำน้ำ (Water Propagation) หรือ ชำในสแฟกนัมมอส จนรากยาวขาวสะอาดก่อนค่อยลงดินครับ</p></details>
+          <details><summary>วิธีดูแล</summary><p>
+                            1. แสงแดด (Light)
+                            ต้องการ: แสงสว่างส่องถึงแบบทางอ้อม (Bright Indirect Light) อย่างน้อย 6 ชม. ต่อวัน
+                            ข้อระวัง: ห้ามโดนแดดจัดโดยตรงเด็ดขาด เพราะส่วนสีขาวไม่มีคลอโรฟิลล์จึงบอบบางและไหม้ได้ทันที
+                            ตำแหน่งที่แนะนำ: ใกล้หน้าต่างทิศตะวันออกหรือทิศใต้ที่มีม่านกรองแสง 
+
+                            2. การรดน้ำ (Watering)
+                            ความถี่: ประมาณ 2-3 วันครั้ง หรือเมื่อวัสดุปลูกแห้งลงไปประมาณ 1-2 นิ้ว
+                            เทคนิค: Albo ชอบวัสดุปลูกที่แห้งสลับเปียก ไม่ควรให้ดินแฉะตลอดเวลาเพื่อป้องกัน โรครากเน่า
+                            คุณภาพน้ำ: หากเป็นไปได้ควรใช้น้ำกลั่นหรือน้ำฝนเพื่อลดการสะสมของแร่ธาตุที่อาจทำให้ขอบใบขาวไหม้ 
+
+                            3. วัสดุปลูก (Soil Mix)
+                            สูตรแนะนำ: ควรใช้สูตรที่โปร่งและระบายน้ำได้ดีเยี่ยม (Chunky Mix) เช่น ผสมกาบมะพร้าวสับ, เพอร์ไลต์, หินภูเขาไฟ หรือเปลือกสน
+                            สัดส่วน: อาจใช้ดินปลูกเพียง 1 ส่วน ผสมกับวัสดุโปร่งอื่นๆ 3 ส่วน เพื่อให้รากได้รับออกซิเจนอย่างเต็มที่ 
+
+                            4. ความชื้นและอุณหภูมิ (Humidity & Temp)
+                            ความชื้น: ควรสูงกว่า 60% ขึ้นไป จะช่วยรักษาใบส่วนสีขาวให้ดูสดใส ไม่แห้งกรอบ
+                            อุณหภูมิ: ชอบความอุ่นในช่วง 18–29 องศาเซลเซียส เลี่ยงการวางในจุดที่ลมแอร์เป่าโดนตัวต้นไม้โดยตรง 
+
+                            5. การใส่ปุ๋ย (Fertilizer)
+                            สูตร: ใช้ปุ๋ยละลายน้ำสูตรเสมอ (เช่น 20-20-20) เจือจาง
+                            ความถี่: ทุกๆ 4-6 สัปดาห์ในช่วงฤดูเจริญเติบโต และควรลดหรือหยุดให้ปุ๋ยในช่วงฤดูหนาวที่ต้นไม้พักตัว 
+
+                            
+                            เคล็ดลับพิเศษ: การใช้ หลักมอส (Moss Pole) ให้ต้นไม้เลือยขึ้นจะช่วยให้ใบมีขนาดใหญ่ขึ้นและเกิดรอยฉีก (Fenestration) ที่สวยงามได้เร็วขึ้นครับ</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://www.southernliving.com/thmb/Spd7_4JdKb3e0ObSF0nDlYlTYU8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-823655632-85c0768e6cb74bfcad51021a7ed92d5b.jpg" alt="Spider Plant"s=20 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Spider Plant</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ิ่นกำเนิด: มีต้นกำเนิดมาจากแอฟริกาใต้ โดยถูกนำเข้ามาในยุโรปช่วงปลายศตวรรษที่ 18 🌍ชื่อเรียก: ชื่อ "Spider Plant" มาจากก้านยาวที่ห้อยลงมาพร้อมต้นอ่อนที่ดูคล้ายกับแมงมุมตัวเล็กๆ ส่วนในประเทศไทยนิยมเรียกว่า "เศรษฐีเรือนใน" เนื่องจากเป็นความเชื่อว่าเป็นไม้มงคลที่จะนำโชคลาภมาสู่ผู้ปลูกครับ </p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>ดิน: ควรใช้ดินร่วนที่ระบายน้ำได้ดี เช่น ผสมดินร่วนกับทรายและปุ๋ยหมัก 🪴การใส่ปุ๋ย: ใส่ปุ๋ยหมักหรือปุ๋ยละลายช้าประมาณ 2 เดือนครั้ง เพื่อให้ใบเขียวสดใส เคล็ดลับ: หากปลายใบเริ่มเป็นสีน้ำตาล อาจเกิดจากสารคลอรีนในน้ำประปา แนะนำให้พักน้ำทิ้งไว้ </p></details>
+          <details><summary>วิธีดูแล</summary><p>แสงแดด: ชอบแสงสว่างแบบส่องถึงทางอ้อม (Indirect light) หลีกเลี่ยงแดดจัดโดยตรงเพราะจะทำให้ใบไหม้ การรดน้ำ: รดน้ำสัปดาห์ละ 1-2 ครั้ง หรือเมื่อหน้าดินแห้ง พยายามอย่าให้ดินแฉะเกินไปเพื่อป้องกันรากเน่า NECTEC </p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://preview.redd.it/alocasia-black-velvet-v0-ys7de528jvv81.jpg?width=1080&crop=smart&auto=webp&s=5892d06c4618b7239281a3fd902ac32992c65aba" alt="Alocasia Black Velvet"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Alocasia Black Velvet</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ไม้ประดับในสกุล Alocasia มีถิ่นกำเนิดในป่าฝนเขตร้อนของ Malaysia ใบสีเขียวเข้มเกือบดำ เนื้อใบกำมะหยี่ มีเส้นใบสีเงินโดดเด่น จัดเป็นไม้หายากและนิยมสะสม</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>
+                        - ใช้ดินโปร่ง ระบายน้ำดี
+                        - ขยายพันธุ์โดยการแยกหัวหรือแยกกอ
+
+                        ⚠️ ข้อควรระวัง
+
+                        - น้ำมากเกินไปอาจทำให้รากเน่า
+                        - ควรระวังเพลี้ยและไรแดง
+                        - น้ำยางของพืชอาจระคายเคืองผิวหนังได้</p></details>
+          <details><summary>วิธีดูแล</summary><p>
+                        - เพิ่มความสวยงามและความหรูหราให้บ้าน
+                        - ช่วยสร้างบรรยากาศสงบและผ่อนคลาย
+                        - ตามความเชื่อ ช่วยเสริมพลังบวกและความเป็นสิริมงคล
+                        - แสงรำไร ไม่โดนแดดจัด
+                        - รดน้ำพอชื้น ไม่ให้ดินแฉะ
+                        - ชอบอากาศชื้นและอุณหภูมิอบอุ่น</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://orchideeen-shop.nl/cdn/shop/products/sized_img_8942_2.jpg?v=1681376375" alt="Anthurium crystallinum"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4> Anthurium crystallinum</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ไม้ประดับเขตร้อน มีถิ่นกำเนิดในป่าฝนของทวีป South America อยู่ในสกุล Anthurium ใบรูปหัวใจสีเขียวเข้ม มีเส้นใบสีเงินสวยงาม เป็นไม้สะสมยอดนิยม</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>
+                        🌱 การปลูก / ขยายพันธุ์
+
+                        - ใช้ดินโปร่ง ระบายน้ำดี
+                        - ขยายพันธุ์โดยการแยกกอ
+
+                        ⚠️ ข้อควรระวัง
+
+                        - น้ำมากเกินไปทำให้รากเน่า
+                        - ควรหลีกเลี่ยงแดดแรง
+                        - น้ำยางอาจระคายเคืองผิวหนังได้ 🌱</p></details>
+          <details><summary>วิธีดูแล</summary><p>
+                        🌿 ประโยชน์
+
+                        - เพิ่มความสวยงามให้บ้านหรือห้องทำงาน
+                        - ช่วยสร้างบรรยากาศสดชื่น
+                        - ช่วยปรับคุณภาพอากาศในบ้าน
+
+                        🌞 การดูแล
+
+                        - ชอบแสงรำไร ไม่โดนแดดจัด
+                        - รดน้ำให้ดินชื้น แต่ไม่แฉะ
+                        - ชอบความชื้นสูง</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://simplytrees.com/cdn/shop/files/SnakePlant.webp?v=1705341080" alt="Snake Plant" s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Snake Plant</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ต้นกำเนิดจากแอฟริกาตะวันตกเขตร้อน เช่น ไนจีเรียถึงคองโก ชาวพื้นเมืองใช้ใบทำเชือกหรือธนู ได้ชื่อ viper's bowstring hemp หรือ Saint George's sword ในบางที่เชื่อว่าเป็นเครื่องรางป้องกันสิ่งชั่วร้าย นิยมเป็นไม้ในร่มตั้งแต่ศตวรรษที่ 20 จากงานวิจัย NASA ปี 1989 ช่วยดูดซับสารพิษ เช่น formaldehyde benzene xylene toluene และ trichloroethylene ใช้ CAM photosynthesis ปล่อยออกซิเจนตอนกลางคืน ดูด CO2 จึงเหมาะวางห้องนอนเพื่อฟอกอากาศ 24 ชั่วโมง</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>การดูแลรักษาชอบแสงทางอ้อมหรือแสงน้อย ทนร่มดี รดน้ำน้อย รอให้ดินแห้งสนิทก่อนรดครั้งต่อไป ทุก 2-4 สัปดาห์ ใช้ดินระบายน้ำดีหรือผสมทราย ปุ๋ยเบา ๆ เดือนละครั้งช่วงโต หน้าหนาวหยุด ขยายพันธุ์โดยแยกหน่อหรือตัดใบปักชำ ปัญหาที่พบบ่อยคือใบเหลืองหรือเน่าจากรดน้ำเกิน ใบซีดจากแสงน้อยเกิน หรือใบไหม้จากแดดแรงตรง</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://libertylandscapesupply.com/cdn/shop/files/zz-plant-scaled.jpg?v=1731513272&width=640" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>ZZ Plant</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>มาจากแอฟริกาตะวันออก เช่น เคนยา แทนซาเนีย ซิมบับเว ชื่อ ZZ มาจากชื่อวิทยาศาสตร์ นิยมปลูกในร่มตั้งแต่ยุค 90s หลังเนเธอร์แลนด์ส่งออก จากงาน NASA ช่วยดูด benzene toluene xylene ได้ดี เป็นเครื่องกรองอากาศธรรมชาติ ทนทานมากจนเรียก eternity plant หรือ Zanzibar gem</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>ชอบแสงทางอ้อมหรือแสงน้อย ทนร่มในคอนโดดีมาก รดน้ำน้อย รอให้ดินแห้งสนิทก่อนรด ทุก 2-4 สัปดาห์ ใช้ดินระบายน้ำดี ปุ๋ยเบา ๆ เดือนละครั้งช่วงโต หน้าหนาวหยุด ขยายพันธุ์แยกเหง้าหรือปักกิ่ง ปัญหาหลักคือใบเหลืองจากรดน้ำเกิน ใบซีดจากแสงน้อย หรือใบไหม้จากแดดแรงตรง</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ82-_rhfp802qBpoAd1aK9lGhC_Jmagb8rJs4gvfyBz1Lj5rvLpXEPZhnZZZ1t1MXtN9rGVrplNDK3m4RJsVTIjqBu5UKyQkmGlAx_Ohs&s=10https://aroidwiki.com/wp-content/uploads/2021/11/golden-pothos-care-image1-1-scaled.jpg" alt="Golden Pothos"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Golden Pothos</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ต้น Mo'orea ใน French Polynesia และบางส่วนใน Solomon Islands ค้นพบครั้งแรกปี 1880 เดิมเรียก Pothos aureus ต่อมาเปลี่ยนชื่อจนยืนยันเป็น Epipremnum aureum เมื่อปี 1964 ปัจจุบันเป็นไม้ในร่มที่นิยมทั่วโลก จากงานวิจัยของ NASA พบว่าช่วยดูดซับสารพิษในอากาศ เช่น formaldehyde benzene xylene toluene จึงได้รับการยกย่องว่าเป็นเครื่องกรองอากาศธรรมชาติที่ดีตัวหนึ่ง</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>การดูแลรักษาชอบแสงทางอ้อมสว่าง รดน้ำเมื่อดินแห้งด้านบน 1-2 นิ้ว ใช้ดินระบายน้ำดี ปุ๋ยเดือนละครั้งช่วงโต หน้าหนาวหยุด ขยายพันธุ์โดยตัดกิ่งปักน้ำหรือดิน รากงอกเร็ว ปัญหาที่พบบ่อยคือใบเหลืองจากรดน้ำมากเกิน ใบซีดจากแสงน้อย หรือใบไหม้จากแดดแรงเกินไป</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://cdn11.bigcommerce.com/s-fr32feerow/product_images/uploaded_images/peace-lily-01.jpg" alt="Peace Lily" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Peace Lily</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ถิ่นกำเนิด: มีต้นกำเนิดจากป่าฝนเขตร้อนในแถบ อเมริกาใต้และเอเชียตะวันออกเฉียงใต้ ความหมาย: ชื่อ "Peace Lily" มาจากดอกสีขาวที่ดูเหมือน "ธงขาว" ซึ่งเป็นสัญลักษณ์สากลของการสงบศึกและความสันติภาพค่ะ 🏳️✨</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>ขั้นตอนการดูแลให้ "ดอกบานสะพรั่ง" (Care Guide) เดหลีเป็นไม้ที่ "สื่อสารเก่ง" ถ้าเขาหิวน้ำ ใบจะตกทันทีเพื่อให้เราโรรู้ค่ะ:
+                            1. แสงแดด (Lighting): ☀️
+                            ชอบแสงรำไรหรือแสงน้อย (Partial Shade)
+                            เคล็ดลับ: ไม่ควรโดนแดดจัดโดยตรงเพราะใบจะไหม้เกรียมได้ง่ายมากค่ะ ⚠️
+                            2. การรดน้ำ (Watering): 🚿
+                            รดน้ำสัปดาห์ละ 2-3 ครั้ง หรือเมื่อหน้าดินเริ่มแห้ง
+                            ข้อควรระวัง: ชอบความชื้นแต่ไม่ชอบน้ำขังแฉะนะคะ เดี๋ยวรากจะเน่าเอาได้ค่ะ 🚫
+
+                            3. วัสดุปลูก (Soil): 🪴
+                            ใช้ดินร่วนที่ระบายน้ำได้ดี ผสมกาบมะพร้าวสับหรือเพอร์ไลต์เล็กน้อยค่ะ
+
+                            4. การดูแลใบและดอก: ✨
+                            ใช้ผ้าชุบน้ำเช็ดใบให้เงางามอยู่เสมอ และถ้าดอกเริ่มกลายเป็นสีเขียวหรือแห้งเหี่ยว ให้ตัดทิ้งที่โคนก้านเพื่อกระตุ้นการออกดอกใหม่ค่ะ ✂️
+
+                            5. อุณหภูมิ: 🌡ชอบอากาศเย็นสบายแบบในบ้านหรือในออฟฟิศ (20-30 องศาเซลเซียส)</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://masonhome.in/cdn/shop/files/296.png?v=1749103348&width=1500" alt="Dracaena"s=10 class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>Dracaena</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม | ต้นโต (1.5-2ม.) 800-3,000 แต้ม</div>
+          <details><summary>ประวัติ</summary><p>ไม้ประดับยอดนิยม มีหลายสายพันธุ์ เช่น Dracaena marginata, Dracaena fragrans มีถิ่นกำเนิดในทวีป Africa ใบเรียวยาวตั้งตรง สีเขียวหรือมีขอบแดง เหมาะกับตกแต่งภายในบ้านและสำนักงาน</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>
+                            🌱 การปลูก / ขยายพันธุ์
+
+                            - ใช้ดินโปร่ง ระบายน้ำดี
+                            - ขยายพันธุ์โดยการตัดยอดแล้วปักชำ
+
+                            ⚠️ ข้อควรระวัง
+
+                            - น้ำมากเกินไปทำให้รากเน่า
+                            - ใบไหม้จากแดดจัด
+                            - บางสายพันธุ์น้ำยางอาจระคายเคืองผิวหนังได้ 🌱</p></details>
+          <details><summary>วิธีดูแล</summary><p>
+                            🌿 ประโยชน์
+
+                            - กรองสารพิษ เช่น เบนซิน ฟอร์มาลดีไฮด์
+                            -ใบแนวตั้งสวย เพิ่มความทันสมัยให้มุมห้อง
+                            - ช่วยสร้างบรรยากาศสดชื่น
+
+                            🌞 การดูแล
+
+                            - ชอบแสงรำไรถึงกลางแจ้ง
+                            - รดน้ำเมื่อดินเริ่มแห้ง
+                            - ทนต่ออากาศแห้งได้บ้าง</p></details>
+        </div>
+
+               <div class="tree-card">
+          <img src="https://www.gardens4you.ie/media/catalog/product/cache/3a7af0a8e0e317723249dc9098669163/f/d/fd23998-0-wh.jpg" alt="Monstera Deliciosa" width="357" height="357" class="sFlh5c FyHeAf" alt="Swiss Cheese Plant Buy Monstera deliciosa - Nursery Nisarga.in" jsname="JuXqh" style="max-width: 554px; height: 357px; margin: 0px; width: 357px;">
+          <h4>ว่านหางจระเข้ (Aloe Vera)</h4>
+          <div class="price">แลกแต้ม: ต้นกล้า 150-400 แต้ม </div>
+          <details><summary>ประวัติ</summary><p>เป็นพืชสมุนไพรที่มีประวัติการใช้อย่างยาวนานหลายพันปี มีต้นกำเนิดแถบชายฝั่งทะเลเมดิเตอร์เรเนียนและคาบสมุทรอาหรับ
+            ลักษณะทางพฤกษศาสตร์: เป็นไม้ล้มลุก ใบหนาอวบน้ำ ขอบใบมีหนามแหลม เรียงเวียนรอบต้น ดอกออกเป็นช่อสีส้ม แดง หรือเหลือง 
+            ประโยชน์: วุ้นใสภายในใบมีฤทธิ์สมานแผล ลดการอักเสบ เพิ่มความชุ่มชื้น รักษาแผลจากแสงแดด และใช้เป็นส่วนผสมเครื่องสำอาง</p></details>
+          <details><summary>รายละเอียดการเพาะปลูก</summary><p>จากเมล็ดหรือกิ่งตอน ดินร่วน pH 5.5-7.5 ระยะห่าง 8-10 ม. ปลูกดีที่สุดช่วงฤดูฝน</p></details>
+          <details><summary>วิธีดูแล</summary><p>การดูแลรักษา Aloe Vera
+            แสงแดด: ชอบแสงแดดจัดตลอดวัน หรืออย่างน้อย 3-5 ชั่วโมง หากแดดจัดเกินไปใบอาจเป็นสีน้ำตาลแดง แต่สามารถปลูกแดดรำไรได้
+            ดิน: ชอบดินร่วนปนทรายที่ระบายน้ำได้ดีมาก (ดินไม่อุ้มน้ำ) หากน้ำขังรากจะเน่าได้ง่าย
+            น้ำ: รดน้ำปานกลาง ควรรอให้ดินแห้งสนิทก่อนรดน้ำครั้งต่อไป ไม่ชอบแฉะ
+            ปุ๋ย/การดูแล: ใส่ปุ๋ยคอกเดือนละครั้ง หมั่นพรวนดินและแยกหน่อเล็กออก เพื่อให้ต้นแม่โตเร็วขึ้น</p></details>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+<style>
+/* customizable snowflake styling */
+.snowflake {
+  color: #fff;
+  font-size: 1em;
+  font-family: Arial, sans-serif;
+  text-shadow: 0 0 5px #000;
+}
+
+.snowflake,.snowflake .inner{animation-iteration-count:infinite;animation-play-state:running}@keyframes snowflakes-fall{0%{transform:translateY(0)}100%{transform:translateY(110vh)}}@keyframes snowflakes-shake{0%,100%{transform:translateX(0)}50%{transform:translateX(80px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;user-select:none;cursor:default;pointer-events:none;animation-name:snowflakes-shake;animation-duration:3s;animation-timing-function:ease-in-out}.snowflake .inner{animation-duration:10s;animation-name:snowflakes-fall;animation-timing-function:linear}.snowflake:nth-of-type(0){left:1%;animation-delay:0s}.snowflake:nth-of-type(0) .inner{animation-delay:0s}.snowflake:first-of-type{left:10%;animation-delay:1s}.snowflake:first-of-type .inner,.snowflake:nth-of-type(8) .inner{animation-delay:1s}.snowflake:nth-of-type(2){left:20%;animation-delay:.5s}.snowflake:nth-of-type(2) .inner,.snowflake:nth-of-type(6) .inner{animation-delay:6s}.snowflake:nth-of-type(3){left:30%;animation-delay:2s}.snowflake:nth-of-type(11) .inner,.snowflake:nth-of-type(3) .inner{animation-delay:4s}.snowflake:nth-of-type(4){left:40%;animation-delay:2s}.snowflake:nth-of-type(10) .inner,.snowflake:nth-of-type(4) .inner{animation-delay:2s}.snowflake:nth-of-type(5){left:50%;animation-delay:3s}.snowflake:nth-of-type(5) .inner{animation-delay:8s}.snowflake:nth-of-type(6){left:60%;animation-delay:2s}.snowflake:nth-of-type(7){left:70%;animation-delay:1s}.snowflake:nth-of-type(7) .inner{animation-delay:2.5s}.snowflake:nth-of-type(8){left:80%;animation-delay:0s}.snowflake:nth-of-type(9){left:90%;animation-delay:1.5s}.snowflake:nth-of-type(9) .inner{animation-delay:3s}.snowflake:nth-of-type(10){left:25%;animation-delay:0s}.snowflake:nth-of-type(11){left:65%;animation-delay:2.5s}
+</style>
+<div class="snowflakes" aria-hidden="true">
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+  <div class="snowflake">
+    <div class="inner">❅</div>
+  </div>
+</div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 SWEP GREEN สร้างสรรค์โลกธรรมชาติด้วย 2026 </p>
+    </div>
+  </footer>
+</body>
+</html>
